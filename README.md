@@ -1,2 +1,2 @@
-# Crossy-Road-AI
-Make Crossy Road, then make AI
+# Crossy-Road
+Make Crossy Road, then make 
