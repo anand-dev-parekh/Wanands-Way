@@ -1,2 +1,2 @@
 # Crossy-Road
-Make Crossy Road, then make 
+Crossy Road in Pygame!
