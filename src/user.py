@@ -6,7 +6,7 @@ class User:
 
     def __init__(self):
 
-        password = quote_plus("PASSWORDHERE")
+        password = quote_plus("")
         cluster = pymongo.MongoClient(f"mongodb+srv://Onion8:{password}@cluster0.tbrc1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
         db = cluster["WanandsWay"]
         self.collection = db["wanandData"]
