@@ -40,7 +40,7 @@ The game connects to a MongoDB Cluster. The original intent of the app was to ma
 
 
 Instructions for Configuring Leaderboard:
-1) clone the repository
+1) Clone the repository
 2) Create a MongoDB cluster
 3) Navigate to the Collections Tab of your cluster 
 4) Create a Database called "Wanands Way" and collection called "wanandData"
