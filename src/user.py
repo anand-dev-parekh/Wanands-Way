@@ -16,16 +16,24 @@ class User:
 
         self.__leaderboard = None
         self.__interval = 1
+        self.collection = None
 
 
     def init_database_connection(self):
 
+        if (self.collection != None):
+            return True
+
         try:
             cluster = pymongo.MongoClient(connection_string)
+
+            # Check if the client is connected by calling the server_info() method
+            cluster.server_info()
+
             db = cluster["WanandsWay"]        
             self.collection = db["wanandData"]
             return True
-        except:
+        except pymongo.errors.ServerSelectionTimeoutError:
             return False
 
     
