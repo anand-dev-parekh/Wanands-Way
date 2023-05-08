@@ -29,3 +29,11 @@ I created this game a while ago, so of course, there are many areas to improve i
 1) Hash and Salt user passwords
 2) Make a prettier design for the game
 3) IF app gets bigger, create a simple api to update+read database
+
+---
+
+## Configure Database/Leaderboard
+Before you configure the leaderboard please read these warnings.
+
+#### Warnings
+The leaderboard connects to a MongoDB Cluster. The original intent of the app was to make a little game my friends and I could play during school, so I made it serverless and placed the MongoDB authentication on the client side (bad practice). This means anyone who were to use your Database would have full access to your MongoDB cluster making the game VERY insecure. So, unless you are also just making a little leaderboard for your friends, I would not recommend configuring the database/leaderboard.
