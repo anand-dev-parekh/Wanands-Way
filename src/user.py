@@ -6,10 +6,6 @@ class User:
 
     def __init__(self):
 
-        password = quote_plus("")
-        cluster = pymongo.MongoClient(f"mongodb+srv://Onion8:{password}@cluster0.tbrc1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
-        db = cluster["WanandsWay"]
-        self.collection = db["wanandData"]
         
         self.__mode = 0 #Which textbox user is clicked on
         #0 represents nothing, 1 represents username, 2 represents password
@@ -20,6 +16,18 @@ class User:
 
         self.__leaderboard = None
         self.__interval = 1
+
+
+    def init_database_connection(self):
+
+        try:
+            password = quote_plus("")
+            cluster = pymongo.MongoClient(f"mongodb+srv://Onion8:{password}@cluster0.tbrc1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+            db = cluster["WanandsWay"]        
+            self.collection = db["wanandData"]
+            return True
+        except:
+            return False
 
     
     def edit_active(self, char):

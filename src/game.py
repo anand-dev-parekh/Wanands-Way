@@ -21,6 +21,7 @@ class Game:
         self.board = None
         self.stage = Stage.LOGIN_OR_REGISTER
         self.user = User()
+        self.isOnline = True 
 
 
         clock = pygame.time.Clock()
@@ -61,7 +62,7 @@ class Game:
 
     def login_or_register(self):
         self.screen.fill((0,0,0))
-        login_button, register_button = self.create_text("Login", 300, 300), self.create_text("Register", 600, 600)      
+        login_button, register_button, play_offline_button = self.create_text("Login", 300, 300), self.create_text("Register", 600, 600), self.create_text("Play Offline", 800, 450)
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -69,12 +70,20 @@ class Game:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.is_button_collision(event, login_button, Stage.LPASSWORD)
                 self.is_button_collision(event, register_button, Stage.RPASSWORD)
+                if play_offline_button.collidepoint(event.pos):
+                    self.stage = Stage.MENU
+                    self.isOnline = False
 
         pygame.display.flip()
 
     def put_password(self):
         self.screen.fill((100, 0, 100))
-        
+
+        connection_status = self.user.init_database_connection()
+        if (connection_status == False):
+            self.stage = Stage.LOGIN_OR_REGISTER
+            return
+
         back_button = self.create_text("Back", 100, 100)
         
         #Creates username and password textbox
@@ -115,6 +124,7 @@ class Game:
                     #if login or register check for validity
                     if enter_button.collidepoint(event.pos):
                         if self.user.connect_account(self.stage):
+                            self.isOnline = True
                             self.stage = Stage.MENU
                     
                     self.is_button_collision(event, back_button, Stage.LOGIN_OR_REGISTER)
@@ -138,7 +148,7 @@ class Game:
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.is_button_collision(event, game_button, Stage.GAME, board_cleanup=Board())
-                self.is_button_collision(event, leader_button, Stage.LEADERBOARD, leaderboard_update=self.user.update_leaderboard())
+                self.is_button_collision(event, leader_button, Stage.LEADERBOARD, leaderboard_update=self.isOnline)
                 if logout_button.collidepoint(event.pos):
                     self.stage = Stage.LOGIN_OR_REGISTER
                     self.user.logout()
@@ -166,7 +176,8 @@ class Game:
                 if event.key == pygame.K_s or event.key == pygame.K_DOWN:
                     if not self.board.move_backward():
                         self.stage = Stage.ENDGAME
-                        self.user.update_score(self.board.get_score())
+                        if (self.isOnline):
+                            self.user.update_score(self.board.get_score())
                         return
 
                 if event.key == pygame.K_d or event.key == pygame.K_RIGHT:
@@ -177,7 +188,8 @@ class Game:
             for rect in self.board.get_matrix()[self.board.get_py()].get_rects():
                 if rect.colliderect(player):
                     self.stage = Stage.ENDGAME
-                    self.user.update_score(self.board.get_score())
+                    if (self.isOnline):
+                        self.user.update_score(self.board.get_score())
                     return
 
         pygame.display.flip()
@@ -197,13 +209,17 @@ class Game:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.is_button_collision(event, game_button, Stage.GAME, board_cleanup=Board())
                 self.is_button_collision(event, menu_button, Stage.MENU)
-                self.is_button_collision(event, leaderboard_button, Stage.LEADERBOARD, leaderboard_update=self.user.update_leaderboard())
+                self.is_button_collision(event, leaderboard_button, Stage.LEADERBOARD, leaderboard_update=self.isOnline)
 
         pygame.display.flip()
 
 
     def leaderboard(self):
         self.screen.fill((123,12,242))
+
+        if (self.isOnline == False):
+            self.stage = Stage.MENU
+            return
 
 
         game_button, menu_button =  self.create_text("Play", 20, 200), self.create_text("Home", 20, 300)
@@ -265,7 +281,7 @@ class Game:
         return pygame.draw.rect(self.screen, color, pygame.Rect(x,y,width,height))
 
 
-    def is_button_collision(self, event, button, newStage, board_cleanup=None, leaderboard_update=None):
+    def is_button_collision(self, event, button, newStage, board_cleanup=None, leaderboard_update=False):
         """
         Checks if button is clicked, sets new stage, cleans up Board or makes board
         :param event: pygame.event
@@ -273,6 +289,10 @@ class Game:
         :param newStage: Stage
         :param(OPTIONAL) cleanup: Board
         """
+
+        if (leaderboard_update):
+            self.user.update_leaderboard()
+
         if button.collidepoint(event.pos):
             self.stage = newStage
             self.board = board_cleanup
