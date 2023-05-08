@@ -1,6 +1,6 @@
 import pymongo
-from urllib.parse import quote_plus
 from stage import Stage
+from config import connection_string
 
 class User:
 
@@ -21,8 +21,7 @@ class User:
     def init_database_connection(self):
 
         try:
-            password = quote_plus("")
-            cluster = pymongo.MongoClient(f"mongodb+srv://Onion8:{password}@cluster0.tbrc1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+            cluster = pymongo.MongoClient(connection_string)
             db = cluster["WanandsWay"]        
             self.collection = db["wanandData"]
             return True
