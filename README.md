@@ -24,6 +24,8 @@ python3 main.py
 ---
 
 ### Warnings and Updates
-I created this game a while ago, and don't really plan on making any new changes to it. However, if you would like, make a pull request and I'll update it! Anyways heres a list of things that should be done to this game.
+I created this game a while ago, so of course, there are many areas to improve in this game. I don't plan to work on this game anymore, however, if you would like, make a pull request and I'll update it! Anyways heres a list of things that should be done to this game.
 
 1) Hash and Salt user passwords
+2) Make a prettier design for the game
+3) IF app gets bigger, create a simple api to update+read database
